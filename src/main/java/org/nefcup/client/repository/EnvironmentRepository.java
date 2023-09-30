@@ -2,7 +2,7 @@ package org.nefcup.client.repository;
 
 public class EnvironmentRepository {
     /*
-    * Адрес сервира например http://localhost/nefcup
+    * Адрес сервиса например http://localhost/nefcup
     * Обязательный параметр */
     public static final String SERVICE_ADDRESS_ENVIRONMENT_NAME = "NEFCUP.SERVICE-ADDRESS";
 
