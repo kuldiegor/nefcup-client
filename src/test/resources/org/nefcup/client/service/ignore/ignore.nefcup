@@ -1,0 +1,7 @@
+#This is comment
+#In second line the sharp is part of name
+\#sometext
+temp/
+temp
+.gitignore
+temp/123
