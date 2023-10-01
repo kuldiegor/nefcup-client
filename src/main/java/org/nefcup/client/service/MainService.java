@@ -24,8 +24,10 @@ public class MainService {
         try (Stream<Path> pathStream = Files.walk(projectDirectory)) {
             List<Path> pathList = pathStream.collect(Collectors.toList());
             for (Path path:pathList){
-                String relativizeStr = projectDirectory.relativize(path).toString();
-                if (ignoreService.isIgnore(relativizeStr)){
+                Path relativize = projectDirectory.relativize(path);
+                String relativizeStr = relativize.toString();
+
+                if (ignoreService.isIgnore(relativize)){
                     continue;
                 }
                 if (Files.isDirectory(path)){

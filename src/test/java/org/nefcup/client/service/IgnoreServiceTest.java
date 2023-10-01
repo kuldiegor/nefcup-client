@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,18 +39,18 @@ class IgnoreServiceTest {
             IgnoreService ignoreService = new IgnoreService(text);
             /*
             * Проверка на стандартные строки вне зависимости от строк в ignore.nefcup*/
-            assertTrue(ignoreService.isIgnore("ignore.nefcup"));
-            assertTrue(ignoreService.isIgnore("nefcup.sh"));
+            assertTrue(ignoreService.isIgnore(Path.of("ignore.nefcup")));
+            assertTrue(ignoreService.isIgnore(Path.of("nefcup.sh")));
             /*
             * Проверка на соотесвие строкам в ignore.nefcup*/
-            assertTrue(ignoreService.isIgnore("temp/123"));
-            assertTrue(ignoreService.isIgnore(".gitignore"));
+            assertTrue(ignoreService.isIgnore(Path.of("temp/123")));
+            assertTrue(ignoreService.isIgnore(Path.of(".gitignore")));
 
             /*
              * Проверка на отсутвующие строки в ignore.nefcup и влияние регистра*/
-            assertFalse(ignoreService.isIgnore(".giTignore"));
-            assertFalse(ignoreService.isIgnore("temp/123/456"));
-            assertFalse(ignoreService.isIgnore("temp/1234"));
+            assertFalse(ignoreService.isIgnore(Path.of(".giTignore")));
+            assertTrue(ignoreService.isIgnore(Path.of("temp/123/456")));
+            assertTrue(ignoreService.isIgnore(Path.of("temp/1234")));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -61,16 +62,16 @@ class IgnoreServiceTest {
 
         /*
          * Проверка на стандартные строки вне зависимости от строк в ignore.nefcup*/
-        assertTrue(ignoreService.isIgnore("ignore.nefcup"));
-        assertTrue(ignoreService.isIgnore("nefcup.sh"));
+        assertTrue(ignoreService.isIgnore(Path.of("ignore.nefcup")));
+        assertTrue(ignoreService.isIgnore(Path.of("nefcup.sh")));
 
         /*
         * Так как на вход не был подан текст из ignore.nefcup
         * то все строки кроме стандартных не должны быть проигнорированы */
-        assertFalse(ignoreService.isIgnore("temp/123"));
-        assertFalse(ignoreService.isIgnore(".gitignore"));
-        assertFalse(ignoreService.isIgnore(".giTignore"));
-        assertFalse(ignoreService.isIgnore("temp/123/456"));
-        assertFalse(ignoreService.isIgnore("temp/1234"));
+        assertFalse(ignoreService.isIgnore(Path.of("temp/123")));
+        assertFalse(ignoreService.isIgnore(Path.of(".gitignore")));
+        assertFalse(ignoreService.isIgnore(Path.of(".giTignore")));
+        assertFalse(ignoreService.isIgnore(Path.of("temp/123/456")));
+        assertFalse(ignoreService.isIgnore(Path.of("temp/1234")));
     }
 }

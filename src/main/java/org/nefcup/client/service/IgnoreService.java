@@ -1,5 +1,6 @@
 package org.nefcup.client.service;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -27,8 +28,18 @@ public class IgnoreService {
                 .collect(Collectors.toList());
     }
 
-    public boolean isIgnore(String fileName){
-        return patternSet.contains(fileName);
+    public boolean isIgnore(Path path){
+        String fileName = path.getName(0).toString();
+        if (patternSet.contains(fileName)){
+            return true;
+        }
+        for (int i=1;i<path.getNameCount();i++){
+            fileName += path.getName(i);
+            if (patternSet.contains(fileName)){
+                return true;
+            }
+        }
+        return false;
     }
 
 
