@@ -52,11 +52,12 @@ public class NefcupService {
     public void uploadProjectFile(
             String projectName,
             String fileName,
-            InputStream inputStream
-    ) throws IOException {
+            InputStream inputStream,
+            boolean isReplace) throws IOException {
         HttpPost httpPost = new HttpPost(serviceAddress +PROJECT_FILE_UPLOAD_PATH+
                 "?project-name="+URLEncoder.encode(projectName,StandardCharsets.UTF_8)+
-                "&file-name="+URLEncoder.encode(fileName,StandardCharsets.UTF_8)
+                "&file-name="+URLEncoder.encode(fileName,StandardCharsets.UTF_8)+
+                "&is-replace="+URLEncoder.encode(Boolean.toString(isReplace),StandardCharsets.UTF_8)
                 );
 
         httpPost.setEntity(new InputStreamEntity(inputStream,ContentType.APPLICATION_OCTET_STREAM));

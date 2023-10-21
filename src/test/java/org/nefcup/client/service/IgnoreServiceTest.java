@@ -57,7 +57,7 @@ class IgnoreServiceTest {
     }
 
     @Test
-    void createNefcupServiceWithNullPattrensText() {
+    void createNefcupServiceWithNullPatternsText() {
         IgnoreService ignoreService = new IgnoreService(null);
 
         /*

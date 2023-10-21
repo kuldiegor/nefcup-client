@@ -2,7 +2,6 @@ package org.nefcup.client.service;
 
 import lombok.RequiredArgsConstructor;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -18,8 +17,11 @@ public class MainService {
     private final NefcupService nefcupService;
     private final IgnoreService ignoreService;
 
-    public void process() throws IOException {
+    public void clean() throws IOException {
         nefcupService.cleanProject(projectNameStr);
+    }
+
+    public void upload(boolean isReplace) throws IOException {
         Path projectDirectory = Path.of(projectDirectoryStr);
         try (Stream<Path> pathStream = Files.walk(projectDirectory)) {
             List<Path> pathList = pathStream.collect(Collectors.toList());
@@ -34,10 +36,15 @@ public class MainService {
                     nefcupService.createProjectDirectory(projectNameStr,relativizeStr);
                 } else if (Files.isRegularFile(path)){
                     try (InputStream inputStream = Files.newInputStream(path)) {
-                        nefcupService.uploadProjectFile(projectNameStr,relativizeStr,inputStream);
+                        nefcupService.uploadProjectFile(projectNameStr,relativizeStr,inputStream,isReplace);
                     }
                 }
             }
         }
+    }
+
+    public void deploy() throws IOException {
+        clean();
+        upload(false);
     }
 }

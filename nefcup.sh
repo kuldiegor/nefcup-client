@@ -3,4 +3,4 @@
 #export NEFCUP.TOKEN=
 #export NEFCUP.PROJECT-NAME=
 #export NEFCUP.PROJECT-DIRECTORY=
-java -jar nefcup-client-1.0.0-jar-with-dependencies.jar
+java -jar nefcup-client-1.2.0-jar-with-dependencies.jar

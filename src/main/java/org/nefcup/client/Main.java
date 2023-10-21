@@ -8,11 +8,13 @@ import org.nefcup.client.service.NefcupService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class Main {
+    private static final String CLEAN_METHOD = "clean";
+    private static final String UPLOAD_METHOD = "upload";
+    private static final String DEPLOY_METHOD = "deploy";
+    private static final String REPLACE_PARAMETER = "replace";
+
     public static void main(String[] args) throws IOException {
         if (EnvironmentRepository.getToken()==null){
             System.out.println("The \""+EnvironmentRepository.TOKEN_ENVIRONMENT_NAME+"\" environment variable is not specified");
@@ -47,7 +49,27 @@ public class Main {
                 nefcupService,
                 ignoreService
         );
-        mainService.process();
-
+        String method = DEPLOY_METHOD;
+        boolean isReplace = false;
+        if (args.length!=0){
+            String[] methodAndParameters = args[0].toLowerCase().split(":");
+            if (methodAndParameters.length==0){
+                System.out.println("The method and parameters cannot be parsed");
+                System.exit(1);
+            }
+            method = methodAndParameters[0];
+            if (methodAndParameters.length>1){
+                isReplace = REPLACE_PARAMETER.equalsIgnoreCase(methodAndParameters[1]);
+            }
+        }
+        switch (method){
+            case DEPLOY_METHOD -> mainService.deploy();
+            case CLEAN_METHOD -> mainService.clean();
+            case UPLOAD_METHOD -> mainService.upload(isReplace);
+            default -> {
+                System.out.println("The method and parameters cannot be parsed");
+                System.exit(1);
+            }
+        }
     }
 }
