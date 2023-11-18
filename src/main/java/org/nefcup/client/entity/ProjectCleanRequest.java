@@ -24,4 +24,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProjectCleanRequest {
     private String projectName;
+    private String cleanIgnoreText;
 }

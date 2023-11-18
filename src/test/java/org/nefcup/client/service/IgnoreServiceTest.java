@@ -34,13 +34,14 @@ class IgnoreServiceTest {
         try (InputStream resourceStream = IgnoreServiceTest.class.getResourceAsStream("/org/nefcup/client/service/ignore/ignore.nefcup")) {
             String text = new String(resourceStream.readAllBytes(), StandardCharsets.UTF_8);
             List<String> patterns = IgnoreService.parsePatterns(text);
-            assertEquals(5,patterns.size());
+            assertEquals(6,patterns.size());
             assertLinesMatch(Arrays.asList(
                     "#sometext",
                     "temp/",
                     "temp",
                     ".gitignore",
-                    "temp/123"
+                    "temp/123",
+                    "test/123"
             ),patterns);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -56,10 +57,12 @@ class IgnoreServiceTest {
             * Проверка на стандартные строки вне зависимости от строк в ignore.nefcup*/
             assertTrue(ignoreService.isIgnore(Path.of("ignore.nefcup")));
             assertTrue(ignoreService.isIgnore(Path.of("nefcup.sh")));
+            assertTrue(ignoreService.isIgnore(Path.of("clean_ignore.nefcup")));
             /*
-            * Проверка на соотесвие строкам в ignore.nefcup*/
+            * Проверка на соответствие строкам в ignore.nefcup*/
             assertTrue(ignoreService.isIgnore(Path.of("temp/123")));
             assertTrue(ignoreService.isIgnore(Path.of(".gitignore")));
+            assertTrue(ignoreService.isIgnore(Path.of("test/123")));
 
             /*
              * Проверка на отсутвующие строки в ignore.nefcup и влияние регистра*/
@@ -79,6 +82,7 @@ class IgnoreServiceTest {
          * Проверка на стандартные строки вне зависимости от строк в ignore.nefcup*/
         assertTrue(ignoreService.isIgnore(Path.of("ignore.nefcup")));
         assertTrue(ignoreService.isIgnore(Path.of("nefcup.sh")));
+        assertTrue(ignoreService.isIgnore(Path.of("clean_ignore.nefcup")));
 
         /*
         * Так как на вход не был подан текст из ignore.nefcup

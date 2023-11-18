@@ -29,6 +29,7 @@ public class IgnoreService {
     public IgnoreService(String patternsText) {
         this.patternSet = new HashSet<>(parsePatterns(patternsText));
         this.patternSet.add("ignore.nefcup");
+        this.patternSet.add("clean_ignore.nefcup");
         this.patternSet.add("nefcup.sh");
     }
 
@@ -49,7 +50,7 @@ public class IgnoreService {
             return true;
         }
         for (int i=1;i<path.getNameCount();i++){
-            fileName += path.getName(i);
+            fileName += "/"+path.getName(i);
             if (patternSet.contains(fileName)){
                 return true;
             }

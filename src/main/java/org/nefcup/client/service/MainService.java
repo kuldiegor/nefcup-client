@@ -33,7 +33,8 @@ public class MainService {
     private final IgnoreService ignoreService;
 
     public void clean() throws IOException {
-        nefcupService.cleanProject(projectNameStr);
+
+        nefcupService.cleanProject(projectNameStr,readIfExistsCleanIgnore());
     }
 
     public void upload(boolean isReplace) throws IOException {
@@ -61,5 +62,18 @@ public class MainService {
     public void deploy() throws IOException {
         clean();
         upload(false);
+    }
+
+    private String readIfExistsCleanIgnore(){
+        try {
+            Path cleanIgnorePath = Path.of(projectDirectoryStr, "clean_ignore.nefcup");
+            if (Files.exists(cleanIgnorePath)) {
+                return Files.readString(cleanIgnorePath);
+            } else {
+                return null;
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

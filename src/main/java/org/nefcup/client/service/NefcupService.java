@@ -86,9 +86,14 @@ public class NefcupService {
         });
     }
 
-    public void cleanProject(String projectName) throws IOException {
+    public void cleanProject(String projectName, String cleanIgnoreText) throws IOException {
         HttpPost httpPost = new HttpPost(serviceAddress +PROJECT_CLEAN_PATH);
-        String json = gson.toJson(new ProjectCleanRequest(projectName));
+        String json = gson.toJson(
+                new ProjectCleanRequest(
+                        projectName,
+                        cleanIgnoreText
+                )
+        );
         httpPost.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
         httpPost.addHeader("token",token);
         httpClient.execute(httpPost,response -> {
