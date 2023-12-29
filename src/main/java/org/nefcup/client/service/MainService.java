@@ -37,9 +37,32 @@ public class MainService {
         nefcupService.cleanProject(projectNameStr,readIfExistsCleanIgnore());
     }
 
-    public void upload(boolean isReplace) throws IOException {
+    public void upload(boolean isReplace, String fileName) throws IOException {
         Path projectDirectory = Path.of(projectDirectoryStr);
-        try (Stream<Path> pathStream = Files.walk(projectDirectory)) {
+        Path pathOfFile = projectDirectory;
+        if (fileName!=null) {
+            pathOfFile = Path.of(projectDirectoryStr, fileName);
+        }
+        if (Files.isDirectory(pathOfFile)){
+            uploadDirectory(projectDirectory,pathOfFile,isReplace);
+        } else {
+            uploadFile(projectDirectory,pathOfFile,isReplace);
+        }
+
+    }
+
+    private void uploadFile(Path projectDirectory,Path pathOfFile, boolean isReplace) throws IOException {
+        if (Files.isRegularFile(pathOfFile)){
+            Path relativize = projectDirectory.relativize(pathOfFile);
+            String relativizeStr = relativize.toString();
+            try (InputStream inputStream = Files.newInputStream(pathOfFile)) {
+                nefcupService.uploadProjectFile(projectNameStr,relativizeStr,inputStream,isReplace);
+            }
+        }
+    }
+
+    private void uploadDirectory(Path projectDirectory,Path pathOfDirectory, boolean isReplace) throws IOException {
+        try (Stream<Path> pathStream = Files.walk(pathOfDirectory)) {
             List<Path> pathList = pathStream.collect(Collectors.toList());
             for (Path path:pathList){
                 Path relativize = projectDirectory.relativize(path);
@@ -59,9 +82,10 @@ public class MainService {
         }
     }
 
+
     public void deploy() throws IOException {
         clean();
-        upload(false);
+        upload(false, null);
     }
 
     private String readIfExistsCleanIgnore(){
@@ -75,5 +99,9 @@ public class MainService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void delete(String fileName) throws IOException {
+        nefcupService.deleteProjectFile(projectNameStr,fileName,readIfExistsCleanIgnore());
     }
 }

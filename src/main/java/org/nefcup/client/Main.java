@@ -29,6 +29,7 @@ public class Main {
     private static final String UPLOAD_METHOD = "upload";
     private static final String DEPLOY_METHOD = "deploy";
     private static final String REPLACE_PARAMETER = "replace";
+    private static final String DELETE_METHOD = "delete";
 
     public static void main(String[] args) throws IOException {
         if (EnvironmentRepository.getToken()==null){
@@ -66,6 +67,7 @@ public class Main {
         );
         String method = DEPLOY_METHOD;
         boolean isReplace = false;
+        String fileName = null;
         if (args.length!=0){
             String[] methodAndParameters = args[0].toLowerCase().split(":");
             if (methodAndParameters.length==0){
@@ -76,11 +78,15 @@ public class Main {
             if (methodAndParameters.length>1){
                 isReplace = REPLACE_PARAMETER.equalsIgnoreCase(methodAndParameters[1]);
             }
+            if (args.length>1){
+                fileName = args[1];
+            }
         }
         switch (method){
             case DEPLOY_METHOD -> mainService.deploy();
             case CLEAN_METHOD -> mainService.clean();
-            case UPLOAD_METHOD -> mainService.upload(isReplace);
+            case UPLOAD_METHOD -> mainService.upload(isReplace,fileName);
+            case DELETE_METHOD -> mainService.delete(fileName);
             default -> {
                 System.out.println("The method and parameters cannot be parsed");
                 System.exit(1);

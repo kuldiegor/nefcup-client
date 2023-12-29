@@ -26,6 +26,7 @@ import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpStatus;
 import org.apache.hc.core5.http.io.entity.InputStreamEntity;
 import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.nefcup.client.entity.FileDeleteRequest;
 import org.nefcup.client.entity.ProjectCleanRequest;
 import org.nefcup.client.entity.ProjectCreateDirectoryRequest;
 
@@ -38,6 +39,7 @@ import java.util.concurrent.TimeUnit;
 public class NefcupService {
     private static final int TIMEOUT = 10 * 1000;
     private static final String PROJECT_FILE_UPLOAD_PATH = "/project/file/upload";
+    private static final String PROJECT_FILE_DELETE_PATH = "/project/file/delete";
     private static final String PROJECT_CLEAN_PATH = "/project/clean";
     private static final String PROJECT_DIRECTORY_CREATE_PATH = "/project/directory/create";
 
@@ -81,6 +83,30 @@ public class NefcupService {
             if (response.getCode()!= HttpStatus.SC_OK){
                 response.close();
                 throw new IOException("error when upload file code = "+response.getCode());
+            }
+            return null;
+        });
+    }
+
+    public void deleteProjectFile(
+            String projectName,
+            String fileName,
+            String cleanIgnoreText) throws IOException {
+        HttpPost httpPost = new HttpPost(serviceAddress +PROJECT_FILE_DELETE_PATH);
+
+        String json = gson.toJson(
+                new FileDeleteRequest(
+                        projectName,
+                        fileName,
+                        cleanIgnoreText
+                )
+        );
+        httpPost.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
+        httpPost.addHeader("token",token);
+        httpClient.execute(httpPost,response -> {
+            if (response.getCode()!= HttpStatus.SC_OK){
+                response.close();
+                throw new IOException("error when delete project file code = "+response.getCode());
             }
             return null;
         });
